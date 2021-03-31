@@ -1,0 +1,11 @@
+__pycache__/*
+*.aux
+*.log
+*.pyc
+
+*.aux
+*.fls
+*.fdb_latexmk
+*.log
+*.pdf
+*.gz
