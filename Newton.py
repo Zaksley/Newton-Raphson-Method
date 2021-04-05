@@ -7,6 +7,9 @@ import sys
     f(U) + H(U) * V = 0
 """
 
+Y = []
+YU = []
+YV = []
 
 def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     '''
@@ -34,11 +37,11 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
         
         # === Backtracking ===
         alpha = 0.5
-        j = 0
         norm_fu = np.linalg.norm(fu)
-        value = 0
+        value = U + V
         if (backtrack):
-            value = U + V
+            j = 0
+            print("value : " + str(value))
             while np.linalg.norm(f(value)) > norm_fu and j < N: 
                 V = alpha*V
                 value = U + V
@@ -48,20 +51,34 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
 
         U += V
         fu = f(U)
-
+        Y.append(np.linalg.norm(fu))
+        YU.append(abs(2-U[0]))
+        YV.append(abs(1-U[1]))
         normes.append(norm_fu)
         i += 1
 
-    # === Display few results ===
-    print(normes)
-    print(fu)
+    # print(normes)
+    # print(fu)
+    # print(YU)
+    # print(YV)
+    print(Y)
 
-    x = range(0, len(normes), 1)
-    plt.plot(x, normes)
+    
+    x = range(0, len(Y), 1)
+    # plt.plot(x, YU)
+    plt.plot(x,YU, label="error on u")
+    plt.plot(x,YV, label="error on v")
+    plt.plot(x,Y, label="error on norm(f(U))")
+
     plt.xlabel("x")
     plt.ylabel("Normes de f(x)")
-    plt.show()
+    plt.yscale("log")
 
+    plt.legend()
+    plt.ylabel('Absolute error.')
+    plt.xlabel('Iteration steps.')
+    plt.show()
+    
     return U
 
 # ===== Tests & interesting values ===== 
