@@ -28,44 +28,37 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     normes = [np.linalg.norm(fu)]
     
     # Check the error case when we try to divide by 0 
-    if (J(U0) == 0):
+    if (np.linalg.norm(J(U0)) < epsilon):
         sys.exit("Error - Division by 0")
-
+    # While i < Max iteration count and that norm(f(u)) > epsilon
     while i < N and normes[i] > epsilon :
         
-        (V, residuals, rank, s) = np.linalg.lstsq(J(U),-fu, -1) #rcond = à quoi ? 
+        (V, residuals, rank, s) = np.linalg.lstsq(J(U),-fu, -1) 
         
         # === Backtracking ===
-        alpha = 0.5
         norm_fu = np.linalg.norm(fu)
         value = U + V
         if (backtrack):
+            alpha = 0.5
             j = 0
-            print("value : " + str(value))
+            # print("value : " + str(value))
             while np.linalg.norm(f(value)) > norm_fu and j < N: 
                 V = alpha*V
                 value = U + V
                 j += 1
 
         # === Backtracking ===
-
-        U += V
-        fu = f(U)
+        U = value
+        fu = f(value)
+        normes.append(np.linalg.norm(fu))
         Y.append(np.linalg.norm(fu))
         YU.append(abs(2-U[0]))
         YV.append(abs(1-U[1]))
-        normes.append(norm_fu)
         i += 1
 
-    # print(normes)
-    # print(fu)
-    # print(YU)
-    # print(YV)
-    print(Y)
 
-    
+    # ======== plotting area ======== 
     x = range(0, len(Y), 1)
-    # plt.plot(x, YU)
     plt.plot(x,YU, label="error on u")
     plt.plot(x,YV, label="error on v")
     plt.plot(x,Y, label="error on norm(f(U))")
@@ -77,7 +70,7 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     plt.legend()
     plt.ylabel('Absolute error.')
     plt.xlabel('Iteration steps.')
-    plt.show()
+    # plt.show()
     
     return U
 

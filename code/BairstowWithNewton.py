@@ -1,11 +1,25 @@
 import numpy as np
 from Newton import Newton_Raphson
 
+"""
+    This function returs the couple (r,s,q) such that :
+    p(x) = (x²+ux+v)q + rx + s
+
+    @param p : The polynomial to divide.
+    @param u : The u guess in the above equation.
+    @param v : The v guess in the above equation.
+"""
 def uv_to_rs(p,u,v):
     eq = np.array([1,u,v])
     (q,rem) = np.polydiv(p,eq)
     return (rem[0], rem[1], q)
 
+"""
+    This function returns the vector of p divided by U.
+
+    @param p : The polynomial to divide.
+    @param U : A vector containing two guesses.
+"""
 def F(p,U):
     div = np.polydiv(p,[1,U[0],U[1]])
     if len(div[1]) <= 1:
@@ -46,10 +60,6 @@ def tests():
     eq = np.array([1,6,9,4]) # x³ + 6x² + 9x + 4 = (x² + 2x + 1)(x + 4)
     # eq = np.array([2,5,19,16,30]) # 2x⁴ + 5x³ + 19x² + 16x + 30 = (x² + 2x + 6)(2x² + x + 5)
     # (r, s,q) = uv_to_rs(eq,1,2)
-    # if r != 5 or s != 15 : 
-        # print("[ERROR] In uv_to_rs. Wrong return values.")
-    # else:
-        # print("[SUCCESS] uv_to_rs() returns correct values.")
     res = bairstow(eq,2.5,0.5,10e-14)
     # res = qroot(eq,1.6,6.4,10e-14)
     print("final res : " + str(res))
