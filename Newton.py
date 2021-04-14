@@ -27,9 +27,11 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     # Check the error case when we try to divide by 0 
     if (J(U0) == 0):
         sys.exit("Error - Division by 0")
+        
+    print(normes)
 
     while i < N and normes[i] > epsilon :
-        
+
         (V, residuals, rank, s) = np.linalg.lstsq(J(U),-fu, -1) #rcond = à quoi ? 
         
         # === Backtracking ===
@@ -53,16 +55,19 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
         i += 1
 
     # === Display few results ===
-    print(normes)
-    print(fu)
+    #print(normes)
+    #print(fu)
 
+    """
     x = range(0, len(normes), 1)
     plt.plot(x, normes)
     plt.xlabel("x")
-    plt.ylabel("Normes de f(x)")
+    plt.ylabel("Norm f(x)")
     plt.show()
+    """
 
-    return U
+    #return U
+    return normes
 
 # ===== Tests & interesting values ===== 
 
@@ -104,6 +109,32 @@ def tests():
     res = Newton_Raphson(RtoR_test2,JRtoR,U0,15,1e-10, True)
     print(res)
 
+# ======== Figures
+
+def plot_figures(f, J, U0, N, epsilon):
+
+    # Saving our initial U0
+    save_U0 = np.copy(U0)
+    
+    # Version NO BACKTRACKING")
+    normes_no_backtracking = Newton_Raphson(f, J, U0, N, epsilon, False)
+    x_noBack = range(0, len(normes_no_backtracking), 1)
+
+    # Version BACKTRACKING
+    normes_backtracking = Newton_Raphson(f, J, save_U0, N, epsilon, True)
+    x_Back = range(0, len(normes_backtracking), 1)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig.suptitle('Iterations of Newton-Raphson on f(x) = x^3 − 7x^2 + 8x - 3, U0 = 4.1 and epsilon = 1e-18')
+    ax1.plot(x_noBack, normes_no_backtracking)
+    ax1.set_title("No backtracking")
+    ax2.plot(x_Back, normes_backtracking)
+    ax2.set_title("Backtracking")
+    plt.show()
+    
+
+# =========
+
 # Display function 
 # Used for debug
 def display():
@@ -116,8 +147,11 @@ def display():
     
     
 if __name__ == '__main__':
-    tests()
+    #tests()
     #display()
+    
+    U0 = np.array([[4.1]])
+    plot_figures(RtoR_test2,JRtoR,U0,15,1e-18)
 
 
     
