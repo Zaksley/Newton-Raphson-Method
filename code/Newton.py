@@ -7,6 +7,9 @@ import sys
     f(U) + H(U) * V = 0
 """
 
+Y = []
+YU = []
+YV = []
 
 def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     '''
@@ -25,33 +28,32 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     normes = [np.linalg.norm(fu)]
     
     # Check the error case when we try to divide by 0 
-    if (J(U0) == 0):
+    if (np.linalg.norm(J(U0)) < epsilon):
         sys.exit("Error - Division by 0")
-        
-    print(normes)
-
+    # While i < Max iteration count and that norm(f(u)) > epsilon
     while i < N and normes[i] > epsilon :
-
-        (V, residuals, rank, s) = np.linalg.lstsq(J(U),-fu, -1) #rcond = à quoi ? 
+        
+        (V, residuals, rank, s) = np.linalg.lstsq(J(U),-fu, -1) 
         
         # === Backtracking ===
-        alpha = 0.5
-        j = 0
         norm_fu = np.linalg.norm(fu)
-        value = 0
+        value = U + V
         if (backtrack):
-            value = U + V
+            alpha = 0.5
+            j = 0
+            # print("value : " + str(value))
             while np.linalg.norm(f(value)) > norm_fu and j < N: 
                 V = alpha*V
                 value = U + V
                 j += 1
 
         # === Backtracking ===
-
-        U += V
-        fu = f(U)
-
-        normes.append(norm_fu)
+        U = value
+        fu = f(value)
+        normes.append(np.linalg.norm(fu))
+        Y.append(np.linalg.norm(fu))
+        YU.append(abs(2-U[0]))
+        YV.append(abs(1-U[1]))
         i += 1
 
     # === Display few results ===
