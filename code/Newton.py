@@ -53,22 +53,35 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
         normes.append(np.linalg.norm(fu))
         Y.append(np.linalg.norm(fu))
         YU.append(abs(2-U[0]))
-        YV.append(abs(1-U[1]))
+        YV.append(abs(1-U[0]))
         i += 1
 
     # === Display few results ===
     #print(normes)
     #print(fu)
 
+       # ======== plotting area ======== 
+
+    # === Errors on U & V
     """
-    x = range(0, len(normes), 1)
-    plt.plot(x, normes)
+    x = range(0, len(Y), 1)
+    plt.plot(x,YU, label="error on u")
+    plt.plot(x,YV, label="error on v")
+    plt.plot(x,Y, label="error on norm(f(U))")
+
     plt.xlabel("x")
-    plt.ylabel("Norm f(x)")
+    plt.ylabel("Normes de f(x)")
+    plt.yscale("log")
+
+    plt.legend()
+    plt.ylabel('Absolute error.')
+    plt.xlabel('Iteration steps.')
     plt.show()
     """
 
     #return U
+    
+    # === To display results
     return normes
 
 # ===== Tests & interesting values ===== 
@@ -107,9 +120,9 @@ def JRtoR(x):
 
 def tests():
     U0 = np.array([[4.1]])
-
     res = Newton_Raphson(RtoR_test2,JRtoR,U0,15,1e-10, True)
-    print(res)
+
+    #print(res)
 
 # ======== Figures
 
@@ -152,8 +165,9 @@ if __name__ == '__main__':
     #tests()
     #display()
     
+    
     U0 = np.array([[4.1]])
     plot_figures(RtoR_test2,JRtoR,U0,15,1e-18)
-
+    
 
     
