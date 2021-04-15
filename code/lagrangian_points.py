@@ -91,7 +91,7 @@ def test__lagrangian_points():
     Ufound, Points = [], []
 
     for i in range(len(Ulist)):
-        U = Newton_Raphson(test__force, test__jacob, Ulist[i], 100000, 10**-12, True)
+        U = Newton_Raphson(test__force, test__jacob, Ulist[i], 100000, 10**-12, True, False)
         Ufound.append(U)
 
         # Gathering close points together
@@ -141,7 +141,7 @@ def test__lagrangian_fields():
     At_Fields = [[[0,0,0] for k in range(160)] for j in range(160)]
 
     for i in range(len(Ulist)):
-        U = Newton_Raphson(test__force, test__jacob, Ulist[i], 10000, 10**-12, True)
+        U = Newton_Raphson(test__force, test__jacob, Ulist[i], 10000, 10**-12, True, False)
         Ufound.append(U)
 
         # Gathering close points together

@@ -46,7 +46,7 @@ def bairstow(p, u, v, epsilon, imax=20):
     # Main Function to optimise.
     Fct = lambda U: F(p,U)
     # Execute Newton_Raphson on our function.
-    res = Newton_Raphson(Fct,J,[u,v],25,10e-14,True)
+    res = Newton_Raphson(Fct,J,[u,v],25,10e-14,True, False)
     # Calculate the next polynomial
     next_p = np.polydiv(p,[1,res[0],res[1]])
     # If the next polynomial has more than 2 terms, it re-run bairstow with new 

@@ -11,7 +11,7 @@ Y = []
 YU = []
 YV = []
 
-def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
+def Newton_Raphson(f, J, U0, N, epsilon, backtrack, norms):
     '''
         f : Function that takes a vector as input ans returns a vector.
         J : Function that returns the Jacobian Matrix of a vector.
@@ -19,6 +19,7 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
         N : The maximum amount of iteration.
         epsilon : The precision required to stop iterations.
         backtrack : Booléen to know if we use backtracking or not 
+        norms : Booléen to know if we return U [False] (most of the case) or the array of norms [True]
     '''
 
     # === Initialization ===
@@ -62,7 +63,7 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
 
        # ======== plotting area ======== 
 
-    # === Errors on U & V
+    # === Errors on U & V ===
     """
     x = range(0, len(Y), 1)
     plt.plot(x,YU, label="error on u")
@@ -79,10 +80,11 @@ def Newton_Raphson(f, J, U0, N, epsilon, backtrack):
     plt.show()
     """
 
-    #return U
-    
-    # === To display results
-    return normes
+    if not norms: 
+        return U
+
+    else:
+        return normes
 
 # ===== Tests & interesting values ===== 
 
@@ -132,13 +134,21 @@ def plot_figures(f, J, U0, N, epsilon):
     save_U0 = np.copy(U0)
     
     # Version NO BACKTRACKING")
-    normes_no_backtracking = Newton_Raphson(f, J, U0, N, epsilon, False)
+    normes_no_backtracking = Newton_Raphson(f, J, U0, N, epsilon, False, True)
     x_noBack = range(0, len(normes_no_backtracking), 1)
 
     # Version BACKTRACKING
-    normes_backtracking = Newton_Raphson(f, J, save_U0, N, epsilon, True)
+    normes_backtracking = Newton_Raphson(f, J, save_U0, N, epsilon, True, True)
     x_Back = range(0, len(normes_backtracking), 1)
 
+    plt.plot(x_noBack, normes_no_backtracking, 'b')
+    plt.plot(x_Back, normes_backtracking, 'r')
+    plt.ylabel("value of f(x) norm")
+    plt.xlabel("number of iterations")
+    plt.yscale("log")
+    plt.show()
+
+    """
     fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.suptitle('Iterations of Newton-Raphson on f(x) = x^3 − 7x^2 + 8x - 3, U0 = 4.1 and epsilon = 1e-18')
     ax1.plot(x_noBack, normes_no_backtracking)
@@ -146,12 +156,15 @@ def plot_figures(f, J, U0, N, epsilon):
     ax2.plot(x_Back, normes_backtracking)
     ax2.set_title("Backtracking")
     plt.show()
-    
+    """ 
 
 # =========
 
+
+
+# === Used for debug
+
 # Display function 
-# Used for debug
 def display():
     x = range(-10, 10, 1)
 
